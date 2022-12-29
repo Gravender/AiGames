@@ -51,7 +51,7 @@ class ConnectFourGame extends React.Component<Props, State> {
     ) {
       this.ConnectFour.makeMove(col);
       if (!this.isGameOver()) {
-        const bestMove = minmaxAlphaBeta(this.ConnectFour, "Min", 30);
+        const bestMove = minmaxAlphaBeta(this.ConnectFour, "Min", 10);
         this.ConnectFour.makeMove(bestMove);
       }
       this.setState({

@@ -7,6 +7,8 @@ describe("minmaxAlphaBeta", () => {
       possibleMoves: [1, 2, 3],
       makeMove: jest.fn(),
       undoMove: jest.fn(),
+      canPlay: jest.fn(() => true),
+      getBoard: jest.fn(() => Math.random() * 100),
       isGameOver: jest.fn(() => false),
       getScore: jest.fn(() => 5),
     };
