@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/AiGames/static/css/main.2983f9f8.css",
-    "main.js": "/AiGames/static/js/main.67fd5089.js",
+    "main.css": "/AiGames/static/css/main.ea26eebb.css",
+    "main.js": "/AiGames/static/js/main.fefb1396.js",
     "index.html": "/AiGames/index.html",
-    "main.2983f9f8.css.map": "/AiGames/static/css/main.2983f9f8.css.map",
-    "main.67fd5089.js.map": "/AiGames/static/js/main.67fd5089.js.map"
+    "main.ea26eebb.css.map": "/AiGames/static/css/main.ea26eebb.css.map",
+    "main.fefb1396.js.map": "/AiGames/static/js/main.fefb1396.js.map"
   },
   "entrypoints": [
-    "static/css/main.2983f9f8.css",
-    "static/js/main.67fd5089.js"
+    "static/css/main.ea26eebb.css",
+    "static/js/main.fefb1396.js"
   ]
 }
