@@ -2,31 +2,28 @@ import { Bitboard } from "../bitboard";
 export class ConnectFour {
   private bitboards: Bitboard[];
   private height: number[];
-  private counter: number;
-  private moves: number[];
-  private moveOrder: number[];
-  public possibleMoves: number[];
+  private counter: number = 0;
+  private moves: number[] = [];
+  private moveOrder: number[] = [3, 2, 4, 1, 5, 6, 0];
+  public possibleMoves: number[] = [3, 2, 4, 1, 5, 6, 0];
+  private readonly top = new Bitboard([66052, 135274560]);
+  private readonly mask = new Bitboard([0, 1]);
 
   constructor() {
     // create empty board
     this.height = [0, 7, 14, 21, 28, 35, 42];
     this.bitboards = [new Bitboard([0, 0]), new Bitboard([0, 0])];
-    this.counter = 0;
-    this.moves = [];
-    this.possibleMoves = [3, 2, 4, 1, 5, 6, 0];
-    this.moveOrder = [3, 2, 4, 1, 5, 6, 0];
   }
   canPlay(column: number): boolean {
-    let TOP = new Bitboard([66052, 135274560]);
-    let mask = new Bitboard([0, 1]).shiftLeft(this.height[column]);
-    return TOP.and(mask).isEmpty();
+    const mask = this.mask.shiftLeft(this.height[column]);
+    return this.top.and(mask).isEmpty();
   }
   // makeMove: given a column, place a piece in that columns
   makeMove(column: number): void {
-    let move = new Bitboard([0, 1]).shiftLeft(this.height[column]++); // (1)
+    let move = this.mask.shiftLeft(this.height[column]++);
     this.bitboards[this.counter & 1] =
-      this.bitboards[this.counter & 1].xor(move); // (2)
-    this.moves[this.counter++] = column; // (3)
+      this.bitboards[this.counter & 1].xor(move);
+    this.moves[this.counter++] = column;
     this.possibleMoves = this.getPossibleMoves();
     /* console.log(
       `column: ${column} height: ${
@@ -40,38 +37,25 @@ export class ConnectFour {
   }
   getPossibleMoves() {
     const moves: number[] = [];
-    let TOP = new Bitboard([66052, 135274560]);
-    let mask = new Bitboard([0, 1]);
     for (let col = 0; col <= 6; col++) {
-      mask = new Bitboard([0, 1]).shiftLeft(this.height[col]);
-      if (TOP.and(mask).isEmpty()) moves.push(col);
+      const mask = this.mask.shiftLeft(this.height[col]);
+      if (this.top.and(mask).isEmpty()) {
+        moves.push(col);
+      }
     }
-    let moves2 = this.moveOrder.filter((move) => moves.includes(move));
-    return moves2;
+    return this.moveOrder.filter((move) => moves.includes(move));
   }
   public getBoard(player: number) {
-    let out =
-      this.bitboards[player].board[0].toString() +
-      this.bitboards[player].board[1].toString();
-    return out;
+    return `${this.bitboards[player].board[0]}${this.bitboards[player].board[1]}`;
   }
   public getBoardPrint() {
-    let board = [
-      ["", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", ""],
-      ["", "", "", "", "", "", ""],
-    ];
-    let rows = [5, 5, 5, 5, 5, 5, 5];
+    const board: string[][] = Array.from({ length: 6 }, () =>
+      Array.from({ length: 7 }, () => "")
+    );
+    const rows = [5, 5, 5, 5, 5, 5, 5];
     for (let i = 0; i < this.counter; i++) {
-      let move = this.moves[i];
-      if (i & 1) {
-        board[rows[move]][move] = "Yellow";
-      } else {
-        board[rows[move]][move] = "Red";
-      }
+      const move = this.moves[i];
+      board[rows[move]][move] = i & 1 ? "Yellow" : "Red";
       if (rows[move] !== 0) {
         rows[move]--;
       }
@@ -81,7 +65,7 @@ export class ConnectFour {
   public getTurn() {
     return this.counter & 1;
   }
-  isWin(bitboard: Bitboard) {
+  isWin(bitboard: Bitboard): boolean {
     const directions: Array<number> = [1, 7, 6, 8];
     for (const direction of directions) {
       var firstShift = bitboard.shiftRight(2 * direction);
