@@ -19,6 +19,13 @@ export class Bitboard {
     }
     return targetBoard;
   }
+  or(bb: Bitboard) {
+    var targetBoard = this.copy();
+    for (var i = 0; i < targetBoard.board.length; i++) {
+      targetBoard.board[i] = (targetBoard.board[i] | bb.board[i]) >>> 0;
+    }
+    return targetBoard;
+  }
   xor(bb: Bitboard) {
     var targetBoard = this.copy();
     for (var i = 0; i < targetBoard.board.length; i++) {
