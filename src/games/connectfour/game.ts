@@ -108,12 +108,59 @@ export class ConnectFour {
   }
   // getScore
   getScore(): number {
-    //Check rows
+    // Check rows
     let score = 0;
-    if (this.isWin(this.bitboards[0]))
-      return 22 - Math.floor(1 - this.counter / 2);
-    if (this.isWin(this.bitboards[1]))
-      return -(21 - Math.floor(1 - this.counter / 2));
+    if (this.isWin(this.bitboards[0])) {
+      return Infinity;
+    }
+    if (this.isWin(this.bitboards[1])) {
+      return -Infinity;
+    }
+
+    // Heuristic evaluation
+    const lines = [
+      // Horizontal lines    [0, 1, 2, 3], [1, 2, 3, 4], [2, 3, 4, 5], [3, 4, 5, 6],
+      // Vertical lines
+      [0, 7, 14, 21],
+      [7, 14, 21, 28],
+      [14, 21, 28, 35],
+      [21, 28, 35, 42],
+      // Diagonal lines
+      [0, 8, 16, 24],
+      [1, 9, 17, 25],
+      [2, 10, 18, 26],
+      [3, 11, 19, 27],
+      [7, 15, 23, 31],
+      [8, 16, 24, 32],
+      [9, 17, 25, 33],
+      [10, 18, 26, 34],
+      [14, 22, 30, 38],
+      [15, 23, 31, 39],
+      [16, 24, 32, 40],
+      [17, 25, 33, 41],
+      [3, 12, 21, 30],
+      [4, 13, 22, 31],
+      [5, 14, 23, 32],
+      [6, 15, 24, 33],
+      [10, 19, 28, 37],
+      [11, 20, 29, 38],
+      [12, 21, 30, 39],
+      [13, 22, 31, 40],
+    ];
+
+    const playerOneLines = lines.filter((line) => {
+      const lineBits = new Bitboard([0, 0]);
+      line.forEach((square) => lineBits.or(this.mask.shiftLeft(square)));
+      return !lineBits.and(this.bitboards[0]).isEmpty();
+    }).length;
+
+    const playerTwoLines = lines.filter((line) => {
+      const lineBits = new Bitboard([0, 0]);
+      line.forEach((square) => lineBits.or(this.mask.shiftLeft(square)));
+      return !lineBits.and(this.bitboards[1]).isEmpty();
+    }).length;
+
+    score = playerOneLines - playerTwoLines;
     return score;
   }
 
